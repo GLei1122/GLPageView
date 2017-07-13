@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D20FBB281F1768210041B8B7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20FBB271F1768210041B8B7 /* BaseViewController.swift */; };
 		D2DACE491F146FC0009FE721 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE481F146FC0009FE721 /* AppDelegate.swift */; };
 		D2DACE4B1F146FC0009FE721 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE4A1F146FC0009FE721 /* ViewController.swift */; };
 		D2DACE4E1F146FC0009FE721 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2DACE4C1F146FC0009FE721 /* Main.storyboard */; };
@@ -14,6 +15,8 @@
 		D2DACE531F146FC0009FE721 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2DACE511F146FC0009FE721 /* LaunchScreen.storyboard */; };
 		D2DACE5E1F146FC1009FE721 /* GLPageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE5D1F146FC1009FE721 /* GLPageViewTests.swift */; };
 		D2DACE691F146FC1009FE721 /* GLPageViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE681F146FC1009FE721 /* GLPageViewUITests.swift */; };
+		D2DACE771F1474C0009FE721 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE761F1474C0009FE721 /* Person.swift */; };
+		D2DACE791F147A87009FE721 /* GLPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE781F147A87009FE721 /* GLPageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D20FBB271F1768210041B8B7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		D2DACE451F146FC0009FE721 /* GLPageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLPageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DACE481F146FC0009FE721 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2DACE4A1F146FC0009FE721 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +51,8 @@
 		D2DACE641F146FC1009FE721 /* GLPageViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GLPageViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DACE681F146FC1009FE721 /* GLPageViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLPageViewUITests.swift; sourceTree = "<group>"; };
 		D2DACE6A1F146FC1009FE721 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2DACE761F1474C0009FE721 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		D2DACE781F147A87009FE721 /* GLPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLPageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +104,10 @@
 			isa = PBXGroup;
 			children = (
 				D2DACE481F146FC0009FE721 /* AppDelegate.swift */,
+				D2DACE761F1474C0009FE721 /* Person.swift */,
 				D2DACE4A1F146FC0009FE721 /* ViewController.swift */,
+				D2DACE781F147A87009FE721 /* GLPageView.swift */,
+				D20FBB271F1768210041B8B7 /* BaseViewController.swift */,
 				D2DACE4C1F146FC0009FE721 /* Main.storyboard */,
 				D2DACE4F1F146FC0009FE721 /* Assets.xcassets */,
 				D2DACE511F146FC0009FE721 /* LaunchScreen.storyboard */,
@@ -259,7 +268,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D20FBB281F1768210041B8B7 /* BaseViewController.swift in Sources */,
+				D2DACE771F1474C0009FE721 /* Person.swift in Sources */,
 				D2DACE4B1F146FC0009FE721 /* ViewController.swift in Sources */,
+				D2DACE791F147A87009FE721 /* GLPageView.swift in Sources */,
 				D2DACE491F146FC0009FE721 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,6 +519,7 @@
 				D2DACE6F1F146FC1009FE721 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D2DACE701F146FC1009FE721 /* Build configuration list for PBXNativeTarget "GLPageViewTests" */ = {
 			isa = XCConfigurationList;
@@ -515,6 +528,7 @@
 				D2DACE721F146FC1009FE721 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D2DACE731F146FC1009FE721 /* Build configuration list for PBXNativeTarget "GLPageViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -523,6 +537,7 @@
 				D2DACE751F146FC1009FE721 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
