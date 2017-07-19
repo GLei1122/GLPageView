@@ -22,21 +22,37 @@ class ViewController: UIViewController {
         
         ming.addObserver(self, forKeyPath: "name", options: NSKeyValueObservingOptions.old , context: &myContext)
         
-        let titleArray: Array = ["体育","娱乐","新闻"]
-        for _ in titleArray {
-            
-            let sport: BaseViewController = BaseViewController()
-            self.addChildViewController(sport)
-        }
+        let inset: Float = 225.0 / 255.0
+        self.view.backgroundColor = UIColor.init(colorLiteralRed: inset, green: inset, blue: inset, alpha: 1)
         
-        pageView = GLPageView.initWithChildControllers(childTitles: titleArray, childControllers: self.childViewControllers)
-        pageView?.frame=CGRect(x: 0, y: 60, width: self.view.bounds.size.width, height: self.view.bounds.size.height-60)
-        pageView?.backgroundColor=UIColor.red
+        let titleArray: Array = ["推荐","手游","娱乐","游戏","趣玩"]
+        
+        let recommend = RecommendVC()
+        let phoneGame = PhoneGameVC()
+        let entertainment = EntertainmentVC()
+        let game = GameVC()
+        let funPlay = FunPlayVC()
+        
+        self.addChildViewController(recommend)
+        self.addChildViewController(phoneGame)
+        self.addChildViewController(entertainment)
+        self.addChildViewController(game)
+        self.addChildViewController(funPlay)
+        
+        let frame = CGRect(x: 0, y: 60, width: self.view.bounds.size.width, height: self.view.bounds.size.height-60-0)
+        print(self.view.bounds.size.height)
+        print(NSStringFromCGRect(frame))
+        pageView = GLPageView.init(frame: frame, childTitles: titleArray, childControllers: self.childViewControllers)
+        
+        pageView?.maxNumberOfPageItems = 5
+        
+        pageView?.delegete=self
         
         self.view.addSubview(pageView!)
         
         
     }
+    
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
@@ -60,6 +76,14 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+     
 }
-
+extension ViewController: GLPageViewDelegate {
+    
+    
+    
+    func pageTabViewDidEndChange() {
+        print("哈哈")
+        
+    }
+}

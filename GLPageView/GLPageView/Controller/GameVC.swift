@@ -1,26 +1,21 @@
 //
-//  BaseViewController.swift
+//  GameVC.swift
 //  GLPageView
 //
-//  Created by GL on 2017/7/13.
+//  Created by GL on 2017/7/19.
 //  Copyright © 2017年 GL. All rights reserved.
 //
 
 import UIKit
 
-class BaseViewController: UIViewController {
+class GameVC: BaseViewController {
 
-    
-    let label: UILabel = UILabel()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        label.frame = CGRect(x: 50, y: 200, width: 100, height: 20)
-        label.textColor=UIColor.red;
-        label.textAlignment = NSTextAlignment.center;
-        self.view.addSubview(label)
         // Do any additional setup after loading the view.
+        self.label.text="游戏";
+        self.view.backgroundColor = UIColor.yellow
     }
 
     override func didReceiveMemoryWarning() {

@@ -1,15 +1,16 @@
 //
-//  GLPageTitleLabel.swift
+//  page.swift
 //  GLPageView
 //
-//  Created by GL on 2017/7/14.
+//  Created by GL on 2017/7/19.
 //  Copyright © 2017年 GL. All rights reserved.
 //
 
 import UIKit
 
-class GLPageTitleLabel: UILabel {
+class page: UIButton {
 
+    
     //填充色
     var fillColor: UIColor?
     //填充占比
@@ -28,7 +29,5 @@ class GLPageTitleLabel: UILabel {
         //
         UIRectFillUsingBlendMode(tempRect, CGBlendMode.sourceIn)
     }
-    
-
 
 }

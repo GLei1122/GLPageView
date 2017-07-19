@@ -8,8 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		D20FBB281F1768210041B8B7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20FBB271F1768210041B8B7 /* BaseViewController.swift */; };
+		D2577FF11F1858D50075AEC4 /* GLPageTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2577FF01F1858D50075AEC4 /* GLPageTitleLabel.swift */; };
+		D27AE0721F1F04DC00E0F94F /* page.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27AE0711F1F04DC00E0F94F /* page.swift */; };
+		D2A0D2561F1F4DE20074390A /* EntertainmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A0D2551F1F4DE20074390A /* EntertainmentVC.swift */; };
+		D2A0D2581F1F4DF40074390A /* GameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A0D2571F1F4DF40074390A /* GameVC.swift */; };
+		D2A0D25A1F1F4E1E0074390A /* FunPlayVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A0D2591F1F4E1E0074390A /* FunPlayVC.swift */; };
+		D2A0D25C1F1F50580074390A /* PhoneGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A0D25B1F1F50580074390A /* PhoneGameVC.swift */; };
+		D2A0D25E1F1F50720074390A /* RecommendVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A0D25D1F1F50720074390A /* RecommendVC.swift */; };
 		D2DACE491F146FC0009FE721 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE481F146FC0009FE721 /* AppDelegate.swift */; };
-		D2DACE4B1F146FC0009FE721 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE4A1F146FC0009FE721 /* ViewController.swift */; };
+		D2DACE4B1F146FC0009FE721 /* pageViewBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DACE4A1F146FC0009FE721 /* pageViewBackgroundColor.swift */; };
 		D2DACE4E1F146FC0009FE721 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2DACE4C1F146FC0009FE721 /* Main.storyboard */; };
 		D2DACE501F146FC0009FE721 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DACE4F1F146FC0009FE721 /* Assets.xcassets */; };
 		D2DACE531F146FC0009FE721 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2DACE511F146FC0009FE721 /* LaunchScreen.storyboard */; };
@@ -38,9 +45,16 @@
 
 /* Begin PBXFileReference section */
 		D20FBB271F1768210041B8B7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		D2577FF01F1858D50075AEC4 /* GLPageTitleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLPageTitleLabel.swift; sourceTree = "<group>"; };
+		D27AE0711F1F04DC00E0F94F /* page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = page.swift; sourceTree = "<group>"; };
+		D2A0D2551F1F4DE20074390A /* EntertainmentVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntertainmentVC.swift; sourceTree = "<group>"; };
+		D2A0D2571F1F4DF40074390A /* GameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameVC.swift; sourceTree = "<group>"; };
+		D2A0D2591F1F4E1E0074390A /* FunPlayVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunPlayVC.swift; sourceTree = "<group>"; };
+		D2A0D25B1F1F50580074390A /* PhoneGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneGameVC.swift; sourceTree = "<group>"; };
+		D2A0D25D1F1F50720074390A /* RecommendVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendVC.swift; sourceTree = "<group>"; };
 		D2DACE451F146FC0009FE721 /* GLPageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLPageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DACE481F146FC0009FE721 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D2DACE4A1F146FC0009FE721 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D2DACE4A1F146FC0009FE721 /* pageViewBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pageViewBackgroundColor.swift; sourceTree = "<group>"; };
 		D2DACE4D1F146FC0009FE721 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D2DACE4F1F146FC0009FE721 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2DACE521F146FC0009FE721 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -80,6 +94,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D27AE0731F1F4C6000E0F94F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D2A0D25D1F1F50720074390A /* RecommendVC.swift */,
+				D2A0D25B1F1F50580074390A /* PhoneGameVC.swift */,
+				D2A0D2551F1F4DE20074390A /* EntertainmentVC.swift */,
+				D2A0D2571F1F4DF40074390A /* GameVC.swift */,
+				D2A0D2591F1F4E1E0074390A /* FunPlayVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		D2DACE3C1F146FC0009FE721 = {
 			isa = PBXGroup;
 			children = (
@@ -103,15 +129,18 @@
 		D2DACE471F146FC0009FE721 /* GLPageView */ = {
 			isa = PBXGroup;
 			children = (
+				D27AE0731F1F4C6000E0F94F /* Controller */,
 				D2DACE481F146FC0009FE721 /* AppDelegate.swift */,
 				D2DACE761F1474C0009FE721 /* Person.swift */,
-				D2DACE4A1F146FC0009FE721 /* ViewController.swift */,
+				D2DACE4A1F146FC0009FE721 /* pageViewBackgroundColor.swift */,
 				D2DACE781F147A87009FE721 /* GLPageView.swift */,
+				D2577FF01F1858D50075AEC4 /* GLPageTitleLabel.swift */,
 				D20FBB271F1768210041B8B7 /* BaseViewController.swift */,
 				D2DACE4C1F146FC0009FE721 /* Main.storyboard */,
 				D2DACE4F1F146FC0009FE721 /* Assets.xcassets */,
 				D2DACE511F146FC0009FE721 /* LaunchScreen.storyboard */,
 				D2DACE541F146FC0009FE721 /* Info.plist */,
+				D27AE0711F1F04DC00E0F94F /* page.swift */,
 			);
 			path = GLPageView;
 			sourceTree = "<group>";
@@ -268,11 +297,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2A0D2581F1F4DF40074390A /* GameVC.swift in Sources */,
+				D27AE0721F1F04DC00E0F94F /* page.swift in Sources */,
+				D2A0D25A1F1F4E1E0074390A /* FunPlayVC.swift in Sources */,
 				D20FBB281F1768210041B8B7 /* BaseViewController.swift in Sources */,
+				D2A0D25C1F1F50580074390A /* PhoneGameVC.swift in Sources */,
 				D2DACE771F1474C0009FE721 /* Person.swift in Sources */,
-				D2DACE4B1F146FC0009FE721 /* ViewController.swift in Sources */,
+				D2DACE4B1F146FC0009FE721 /* pageViewBackgroundColor.swift in Sources */,
 				D2DACE791F147A87009FE721 /* GLPageView.swift in Sources */,
+				D2A0D2561F1F4DE20074390A /* EntertainmentVC.swift in Sources */,
 				D2DACE491F146FC0009FE721 /* AppDelegate.swift in Sources */,
+				D2577FF11F1858D50075AEC4 /* GLPageTitleLabel.swift in Sources */,
+				D2A0D25E1F1F50720074390A /* RecommendVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
