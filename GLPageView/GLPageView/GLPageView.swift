@@ -85,11 +85,10 @@ class GLPageView: UIView {
     
     /*标题数组*/
     fileprivate var titlesArray: [String] = []
-    
     fileprivate var controllers: [UIViewController] = []
     
     /*记录上一次的索引 */
-    fileprivate var lastSelectedTabIndex: NSInteger = 0
+    fileprivate var lastSelectedPageIndex: NSInteger = 0
     
     //标题label数组
     fileprivate var pageItemLabels:Array<UILabel>  = []
@@ -101,10 +100,10 @@ class GLPageView: UIView {
     fileprivate var isChangeByClick: Bool = false
     
     /* 记录滑动时左边的itemIndex */
-    fileprivate var leftItemIndex: NSInteger?
+    fileprivate var leftItemIndex: NSInteger = 0
     
     /* 记录滑动时右边的itemIndex */
-    fileprivate var rightItemIndex: NSInteger?
+    fileprivate var rightItemIndex: NSInteger = 0
     
     
     /*XXPageTabTitleStyleScale*/
@@ -127,8 +126,7 @@ class GLPageView: UIView {
    
     
     
-    
-    //构造函数
+     //MARK: - 初始化
     init(frame: CGRect , childTitles: Array<String> , childControllers: Array<UIViewController>) {
        
         pageScrollView = UIScrollView()
@@ -148,7 +146,6 @@ class GLPageView: UIView {
     private func initPageView() {
         
         pageViewSize = CGSize(width: self.bounds.size.width, height: 40);
-
         pageScrollView.showsVerticalScrollIndicator = false;
         pageScrollView.showsHorizontalScrollIndicator = false;
         pageScrollView.backgroundColor = pageViewBackgroundColor
@@ -169,8 +166,6 @@ class GLPageView: UIView {
             pageScrollView.addSubview(pageItem)
             pageItemLabels.append(pageItem)
         }
-        
-        
         //添加下标
         indicatorView.backgroundColor = selectedColor
         self.addSubview(indicatorView)
@@ -195,6 +190,54 @@ class GLPageView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func layoutSubviews() {
+        
+        if isNeedRefreshLayout {
+            
+            if pageViewSize.height <= 0 {
+                pageViewSize.height = 40
+            }
+            if pageViewSize.width <= 0 {
+                pageViewSize.width = self.bounds.size.width
+            }
+            
+            //每个item的宽度
+            pageItemWidth = pageViewSize.width / CGFloat((pageItemLabels.count < maxNumberOfPageItems ? pageItemLabels.count : maxNumberOfPageItems));
+            pageScrollView.frame = CGRect(x: 0, y: 0, width: pageViewSize.width, height: pageViewSize.height)
+            pageScrollView.contentSize = CGSize(width: pageItemWidth * CGFloat(pageItemLabels.count), height: 0)
+            
+            for (index,itemLabel) in pageItemLabels.enumerated() {
+                
+                itemLabel.frame = CGRect(x: pageItemWidth * CGFloat(index), y: 0, width: pageItemWidth, height: pageViewSize.height)
+            }
+            
+//            
+//            if titleStyle == GLPageTitleStyle.Default {
+//                //文字颜色切换
+//                //self.changeSelectedItemToNextItem(selectedPageIndex)
+//            }
+//            
+            //下标view frame
+            self.layoutIndicatorView()
+            
+            //body layout
+            print("---%f",self.bounds.size.height)
+            bodyScrollView.frame = CGRect(x: 0, y: pageViewSize.height, width: self.bounds.size.width, height: self.bounds.size.height-pageViewSize.height)
+            bodyScrollView.contentSize = CGSize(width: self.bounds.size.width * CGFloat(pageItemLabels.count), height: 0)
+            bodyScrollView.contentOffset = CGPoint(x: self.bounds.size.width * CGFloat(selectedPageIndex), y: 0)
+            
+            
+            self.reviseTabContentOffsetBySelectedIndex(false)
+            
+            for (index,childController) in controllers.enumerated() {
+                childController.view.frame = CGRect(x: self.bounds.size.width * CGFloat(index), y: 0, width: bodyScrollView.bounds.size.width, height: bodyScrollView.bounds.size.height)
+            }
+        }
+        
+        
+    }
+
+    //MARK: - 点击分类切换
     func changeChildControllerOnClick(tap: UITapGestureRecognizer)  {
         print("哈哈")
         //获取点击的label
@@ -213,7 +256,7 @@ class GLPageView: UIView {
             
             selectedPageIndex = index
         
-            //bodyScrollView.setContentOffset(CGPoint(x: bodyScrollView.frame.size.width * CGFloat(selectedPageIndex), y: 0), animated: true)
+            bodyScrollView.setContentOffset(CGPoint(x: bodyScrollView.frame.size.width * CGFloat(selectedPageIndex), y: 0), animated: false)
         }
         
     }
@@ -231,47 +274,7 @@ class GLPageView: UIView {
     
     
     
-    override func layoutSubviews() {
-        
-        if isNeedRefreshLayout {
-            
-            if pageViewSize.height <= 0 {
-                pageViewSize.height = 40
-            }
-            if pageViewSize.width <= 0 {
-                pageViewSize.width = self.bounds.size.width
-            }
-            
-            //每个item的宽度
-            pageItemWidth = pageViewSize.width / CGFloat((pageItemLabels.count < maxNumberOfPageItems ? pageItemLabels.count : maxNumberOfPageItems));
-            pageScrollView.frame = CGRect(x: 0, y: 0, width: pageViewSize.width, height: pageViewSize.height)
-            pageScrollView.contentSize = CGSize(width: pageItemWidth * CGFloat(pageItemLabels.count), height: 0)
-            
-            for (index,itemLabel) in pageItemLabels.enumerated() {
-
-                itemLabel.frame = CGRect(x: pageItemWidth * CGFloat(index), y: 0, width: pageItemWidth, height: pageViewSize.height)
-            }
-           
-            //下标view frame
-            self.layoutIndicatorView()
-           
-            //body layout
-            print("---%f",self.bounds.size.height)
-            bodyScrollView.frame = CGRect(x: 0, y: pageViewSize.height, width: self.bounds.size.width, height: self.bounds.size.height-pageViewSize.height)
-            bodyScrollView.contentSize = CGSize(width: self.bounds.size.width * CGFloat(pageItemLabels.count), height: 0)
-            bodyScrollView.contentOffset = CGPoint(x: self.bounds.size.width * CGFloat(selectedPageIndex), y: 0)
-            
-            
-            self.reviseTabContentOffsetBySelectedIndex(false)
-            
-            for (index,childController) in controllers.enumerated() {
-                childController.view.frame = CGRect(x: self.bounds.size.width * CGFloat(index), y: 0, width: bodyScrollView.bounds.size.width, height: bodyScrollView.bounds.size.height)
-            }
-        }
-        
-        
-    }
-    /**
+        /**
      根据选择项修正Page的展示区域
      */
     func reviseTabContentOffsetBySelectedIndex(_ isAnimate: Bool) {
@@ -312,11 +315,11 @@ class GLPageView: UIView {
         isNeedRefreshLayout = true
         isChangeByClick = false
         
-        if lastSelectedTabIndex != selectedPageIndex {
+        if lastSelectedPageIndex != selectedPageIndex {
             self.delegete?.pageTabViewDidEndChange()
         }
         
-        lastSelectedTabIndex = selectedPageIndex
+        lastSelectedPageIndex = selectedPageIndex
       
     }
    
@@ -351,13 +354,250 @@ class GLPageView: UIView {
         }
     }
     
-    
+    //MARK: - setter
     
     
 }
+//MARK: - extension
 extension GLPageView: UIScrollViewDelegate {
     
-   
+    
+    
+    //降速结束
+    /*手指滑动会触发该方法，setContentOffset:animated:不会触发*/
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        if scrollView == bodyScrollView {
+            selectedPageIndex = NSInteger(bodyScrollView.contentOffset.x / bodyScrollView.bounds.size.width)
+            self.reviseTabContentOffsetBySelectedIndex(true)
+        }
+        
+    }
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if scrollView == bodyScrollView {
+            self.reviseTabContentOffsetBySelectedIndex(true)
+        }else{
+            self.finishReviseTabContentOffset()
+        }
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if scrollView == pageScrollView {
+            
+            isNeedRefreshLayout = false
+            let selectPageItem: GLPageTitleLabel = pageItemLabels[selectedPageIndex] as! GLPageTitleLabel
+            
+            let indicatorViewX: CGFloat = selectPageItem.center.x - indicatorView.bounds.size.width * 0.5 - scrollView.contentOffset.x
+            
+            indicatorView.frame = CGRect(x: indicatorViewX, y: indicatorView.bounds.origin.y, width: indicatorView.bounds.size.width, height: indicatorView.bounds.size.height)
+            
+        } else if scrollView == bodyScrollView {
+            
+            //未初始化时不处理
+            if bodyScrollView.contentSize.width <= 0 {
+                return
+            }
+            //滚动过程中不允许layout
+            isNeedRefreshLayout = false
+            
+            //获取当前左右item index(点击方式已获知左右index，无需根据contentoffset计算)
+            
+            if !isChangeByClick {
+                if bodyScrollView.contentOffset.x <= 0 {  //左边界
+                    leftItemIndex = 0
+                    rightItemIndex = 0
+                }else if bodyScrollView.contentOffset.x >= bodyScrollView.contentSize.width - bodyScrollView.bounds.size.width {  //右边界
+                    
+                    leftItemIndex = pageItemLabels.count - 1
+                    rightItemIndex = pageItemLabels.count - 1
+                    
+                }else {
+                    leftItemIndex = NSInteger(bodyScrollView.contentOffset.x / bodyScrollView.bounds.size.width)
+                    rightItemIndex = leftItemIndex + 1;
+                }
+            }
+            
+            
+            //调整title
+            switch titleStyle {
+            case .Default:
+                
+                changeTitleWithDefault()
+                
+                break
+            case .Gradient:
+                
+                changeTitleWithGradient()
+                
+                break
+            case .Blend:
+                
+                changeTitleWithBlend()
+                
+                break
+            default:
+                break
+            }
+        
+            //调整下标
+            switch indicatorStyle {
+            case .Default:
+                changeIndicatorFrame()
+                break
+            case .FollowText:
+                changeIndicatorFrame()
+                break
+            case .Stretch:
+                if(isChangeByClick) {
+                    
+                    changeIndicatorFrame()
+                    
+                } else {
+                    
+                    changeIndicatorFrameByStretch()
+                }
+                break
+            default:
+                break
+            }
+        }
+    }
+  
+    //MARK: - Title animation
+    
+    func changeTitleWithDefault() {
+        
+        let relativeLocation: CGFloat = bodyScrollView.contentOffset.x / CGFloat(bodyScrollView.bounds.size.width) - CGFloat(leftItemIndex)
+        
+        if !isChangeByClick {
+            if relativeLocation > 0.5 {
+                self.changeSelectedItemToNextItem(rightItemIndex)
+                selectedPageIndex = rightItemIndex
+            }else {
+                
+                self.changeSelectedItemToNextItem(leftItemIndex)
+                selectedPageIndex = leftItemIndex
+            }
+            
+            
+        }
+    }
+    
+    func changeTitleWithGradient()  {
+        
+        /*
+        if(_leftItemIndex != _rightItemIndex) {
+            CGFloat rightScale = (self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex)/(_rightItemIndex-_leftItemIndex);
+            CGFloat leftScale = 1-rightScale;
+            
+            //颜色渐变
+            CGFloat difR = _selectedColorR-_unSelectedColorR;
+            CGFloat difG = _selectedColorG-_unSelectedColorG;
+            CGFloat difB = _selectedColorB-_unSelectedColorB;
+            
+            UIColor *leftItemColor = [UIColor colorWithRed:_unSelectedColorR+leftScale*difR green:_unSelectedColorG+leftScale*difG blue:_unSelectedColorB+leftScale*difB alpha:1];
+            UIColor *rightItemColor = [UIColor colorWithRed:_unSelectedColorR+rightScale*difR green:_unSelectedColorG+rightScale*difG blue:_unSelectedColorB+rightScale*difB alpha:1];
+            
+            XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
+            XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
+            leftTabItem.textColor = leftItemColor;
+            rightTabItem.textColor = rightItemColor;
+            
+            //字体渐变
+            leftTabItem.transform = CGAffineTransformMakeScale(_minScale+(1-_minScale)*leftScale, _minScale+(1-_minScale)*leftScale);
+            rightTabItem.transform = CGAffineTransformMakeScale(_minScale+(1-_minScale)*rightScale, _minScale+(1-_minScale)*rightScale);
+        }
+*/
+        
+    }
+    func changeTitleWithBlend() {
+        /*
+        CGFloat leftScale = self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex;
+        if(leftScale == 0) {
+            return; //起点和终点不处理，终点时左右index已更新，会绘画错误（你可以注释看看）
+        }
+        
+        XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
+        XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
+        
+        leftTabItem.textColor = _selectedColor;
+        rightTabItem.textColor = _unSelectedColor;
+        leftTabItem.fillColor = _unSelectedColor;
+        rightTabItem.fillColor = _selectedColor;
+        leftTabItem.process = leftScale;
+        rightTabItem.process = leftScale;
+        */
+    }
+    
+    //MARK: - Indicator animation
+    
+    func changeIndicatorFrame() {
+        
+        //计算indicator此时的centerx
+        let nowIndicatorCenterX: CGFloat = pageItemWidth*(0.5+bodyScrollView.contentOffset.x/bodyScrollView.bounds.size.width)
+        //计算此时body的偏移量在一页中的占比
+        var relativeLocation: CGFloat = (bodyScrollView.contentOffset.x/bodyScrollView.bounds.size.width - CGFloat(leftItemIndex)) / CGFloat(rightItemIndex - leftItemIndex)
+        
+        //记录左右对应的indicator宽度
+        let leftIndicatorWidth: CGFloat = getIndicatorWidthWithTitle(titlesArray[leftItemIndex])
+        
+        let rightIndicatorWidth: CGFloat = getIndicatorWidthWithTitle(titlesArray[rightItemIndex])
+        
+        //左右边界的时候，占比清0
+        if leftItemIndex == rightItemIndex {
+            relativeLocation = 0.0
+        }
+        
+        //基于从左到右方向（无需考虑滑动方向），计算当前中心轴所处位置的长度
+        
+        let nowIndicatorWidth: CGFloat = leftIndicatorWidth + (rightIndicatorWidth - leftIndicatorWidth) * relativeLocation
+        
+        
+        print("-===%f",indicatorView.bounds.origin.y)
+        indicatorView.frame = CGRect(x: nowIndicatorCenterX - nowIndicatorWidth * 0.5 - pageScrollView.contentOffset.x, y: indicatorView.frame.origin.y, width: nowIndicatorWidth, height: indicatorView.bounds.size.height)
+        
+        
+    }
+    
+    func changeIndicatorFrameByStretch()  {
+        
+        /*
+        if(_indicatorWidth <= 0) {
+            return;
+        }
+        
+        //计算此时body的偏移量在一页中的占比
+        CGFloat relativeLocation = (self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex)/(_rightItemIndex-_leftItemIndex);
+        //左右边界的时候，占比清0
+        if(_leftItemIndex == _rightItemIndex) {
+            relativeLocation = 0;
+        }
+        
+        XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
+        XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
+        
+        //当前的frame
+        CGRect nowFrame = CGRectMake(0, ORIGIN_Y(self.indicatorView), 0, HEIGHT(self.indicatorView));
+        
+        //计算宽度
+        if(relativeLocation <= 0.5) {
+            nowFrame.size.width = _indicatorWidth+_tabItemWidth*(relativeLocation/0.5);
+            nowFrame.origin.x = (leftTabItem.center.x-self.tabView.contentOffset.x)-_indicatorWidth/2.0;
+        } else {
+            nowFrame.size.width = _indicatorWidth+_tabItemWidth*((1-relativeLocation)/0.5);
+            nowFrame.origin.x = (rightTabItem.center.x-self.tabView.contentOffset.x)+_indicatorWidth/2.0-nowFrame.size.width;
+        }
+        
+        self.indicatorView.frame = nowFrame;
+        */
+    }
+    
+    
+
     
     
 }
+
+
+
+

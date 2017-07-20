@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         pageView = GLPageView.init(frame: frame, childTitles: titleArray, childControllers: self.childViewControllers)
         
         pageView?.maxNumberOfPageItems = 5
-        
+        //pageView?.selectedPageIndex = 1;
         pageView?.delegete=self
         
         self.view.addSubview(pageView!)
