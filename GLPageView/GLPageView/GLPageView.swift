@@ -30,8 +30,6 @@ protocol  GLPageViewDelegate{
 
 class GLPageView: UIView {
 
-   
-    
     var delegete: GLPageViewDelegate?
     
     /*pageView背景色，默认white*/
@@ -59,13 +57,26 @@ class GLPageView: UIView {
     
     
     /*未选择颜色 默认黑色*/
-    var unSelectedColor: UIColor = UIColor.black
+    var unSelectedColor: UIColor = UIColor.black {
+        didSet {
+            updateColors(selectBool: false)
+        }
+    }
+
     
     /*当前选中颜色 默认红色*/
-    var selectedColor: UIColor = UIColor.red
+    var selectedColor: UIColor = UIColor.red {
+        didSet {
+            updateColors(selectBool: true)
+        }
+    }
     
     /*是否打开body的边界弹动效果*/
-    var bodyBounces: Bool = true
+    var bodyBounces: Bool = true {
+        didSet {
+            bodyScrollView.bounces = bodyBounces
+        }
+    }
     
     /*Title效果设置*/
     var titleStyle: GLPageTitleStyle = GLPageTitleStyle.Default
@@ -134,7 +145,6 @@ class GLPageView: UIView {
         controllers = childControllers;
         titlesArray = childTitles;
         
-        
         super.init(frame: frame)
         
         //创建标题view
@@ -155,6 +165,8 @@ class GLPageView: UIView {
         self.addSubview(pageScrollView);
         
         //遍历
+        print(selectedPageIndex)
+        
         for (index,str) in titlesArray.enumerated() {
             let pageItem: GLPageTitleLabel = GLPageTitleLabel()
             pageItem.font = pageItemFont;
@@ -211,12 +223,12 @@ class GLPageView: UIView {
                 itemLabel.frame = CGRect(x: pageItemWidth * CGFloat(index), y: 0, width: pageItemWidth, height: pageViewSize.height)
             }
             
-//            
-//            if titleStyle == GLPageTitleStyle.Default {
-//                //文字颜色切换
-//                //self.changeSelectedItemToNextItem(selectedPageIndex)
-//            }
-//            
+            
+            if titleStyle == GLPageTitleStyle.Default {
+                //文字颜色切换
+                self.changeSelectedItemToNextItem(selectedPageIndex)
+            }
+//
             //下标view frame
             self.layoutIndicatorView()
             
@@ -256,6 +268,8 @@ class GLPageView: UIView {
             
             selectedPageIndex = index
         
+            
+            
             bodyScrollView.setContentOffset(CGPoint(x: bodyScrollView.frame.size.width * CGFloat(selectedPageIndex), y: 0), animated: false)
         }
         
@@ -354,7 +368,35 @@ class GLPageView: UIView {
         }
     }
     
-    //MARK: - setter
+    //MARK: - didSet
+    
+    // 更新颜色
+    private func updateColors(selectBool: Bool) {
+        
+        if selectBool {
+        
+            pageItemLabels[selectedPageIndex].textColor = selectedColor
+            indicatorView.backgroundColor = selectedColor
+            
+            let rgb: [CGFloat] = getRGBWithColor(color: selectedColor)
+            selectedColorR = rgb[0]
+            selectedColorG = rgb[1]
+            selectedColorB = rgb[2]
+            
+        }else{
+            
+            for (index,item) in pageItemLabels.enumerated() {
+                item.textColor = index == selectedPageIndex ? selectedColor : unSelectedColor
+            }
+            let rgb: [CGFloat] = getRGBWithColor(color: unSelectedColor)
+            unSelectedColorR = rgb[0]
+            unSelectedColorG = rgb[1]
+            unSelectedColorB = rgb[2]
+            
+        }
+        
+        
+    }
     
     
 }
@@ -419,26 +461,8 @@ extension GLPageView: UIScrollViewDelegate {
             
             
             //调整title
-            switch titleStyle {
-            case .Default:
-                
-                changeTitleWithDefault()
-                
-                break
-            case .Gradient:
-                
-                changeTitleWithGradient()
-                
-                break
-            case .Blend:
-                
-                changeTitleWithBlend()
-                
-                break
-            default:
-                break
-            }
-        
+            changeTitleStyle()
+            
             //调整下标
             switch indicatorStyle {
             case .Default:
@@ -465,68 +489,92 @@ extension GLPageView: UIScrollViewDelegate {
   
     //MARK: - Title animation
     
-    func changeTitleWithDefault() {
+    func changeTitleStyle() {
         
-        let relativeLocation: CGFloat = bodyScrollView.contentOffset.x / CGFloat(bodyScrollView.bounds.size.width) - CGFloat(leftItemIndex)
         
-        if !isChangeByClick {
-            if relativeLocation > 0.5 {
-                self.changeSelectedItemToNextItem(rightItemIndex)
-                selectedPageIndex = rightItemIndex
-            }else {
+        //bodyScrollView的偏移百分比
+        let bodyOffsetPercent: CGFloat = bodyScrollView.contentOffset.x / CGFloat(bodyScrollView.bounds.size.width) - CGFloat(leftItemIndex)
+        switch titleStyle {
+        case .Default:
+            if !isChangeByClick {
+                //滑动超过页面一半,切换视图和文字
+                if bodyOffsetPercent > 0.5 {
+                    self.changeSelectedItemToNextItem(rightItemIndex)
+                    selectedPageIndex = rightItemIndex
+                }else {
+                    self.changeSelectedItemToNextItem(leftItemIndex)
+                    selectedPageIndex = leftItemIndex
+                }
+            }
+            break
+        case .Gradient:
+            
+            //当页面不在左边界 右边界时
+            if leftItemIndex != rightItemIndex {
                 
-                self.changeSelectedItemToNextItem(leftItemIndex)
-                selectedPageIndex = leftItemIndex
+                let rightScale: CGFloat = bodyOffsetPercent
+                
+                let leftScale = 1 - rightScale
+
+                //颜色渐变
+                let difR = selectedColorR - unSelectedColorR
+                let difG = selectedColorG - unSelectedColorG
+                let difB = selectedColorB - unSelectedColorB
+                
+                print("difR = , difG = , difB=",difR,difG,difB)
+                
+                print(unSelectedColorR+leftScale*difR)
+                print(unSelectedColorG+leftScale*difG)
+                print(unSelectedColorB+leftScale*difB)
+                
+                
+                let leftItemColor = UIColor.init(colorLiteralRed: Float(unSelectedColorR+leftScale*difR), green: Float(unSelectedColorG+leftScale*difG), blue: Float(unSelectedColorB+leftScale*difB), alpha: 1)
+                
+                let rightItemColor = UIColor.init(colorLiteralRed: Float(unSelectedColorR+rightScale*difR), green: Float(unSelectedColorG+rightScale*difG), blue: Float(unSelectedColorB+rightScale*difB), alpha: 1)
+                
+                let leftPageItem = pageItemLabels[leftItemIndex]
+                let rightPageItem = pageItemLabels[rightItemIndex]
+                
+                leftPageItem.textColor = leftItemColor;
+                rightPageItem.textColor = rightItemColor;
+                
+                //字体渐变
+              
+                let left: CGFloat = minScale+(1-minScale)*leftScale
+                print("left = ",left)
+                leftPageItem.transform = CGAffineTransform.init(scaleX: left, y: left)
+                
+                let right: CGFloat = minScale+(1-minScale)*rightScale
+                print("right = ",right)
+                rightPageItem.transform = CGAffineTransform.init(scaleX: right, y: right)
+                
+            }
+
+            break
+        case .Blend:
+            
+            if leftItemIndex != rightItemIndex {
+               
+                //起点和终点不处理，终点时左右index已更新，会绘画错误（你可以注释看看）
+                if bodyOffsetPercent == 0 {
+                    return
+                }
+                let leftPageItem: GLPageTitleLabel = pageItemLabels[leftItemIndex] as! GLPageTitleLabel
+                let rightPageItem: GLPageTitleLabel = pageItemLabels[rightItemIndex] as! GLPageTitleLabel
+                leftPageItem.textColor = selectedColor;
+                rightPageItem.textColor = unSelectedColor;
+            
+                leftPageItem.fillColor = unSelectedColor;
+                rightPageItem.fillColor = selectedColor;
+                leftPageItem.process = bodyOffsetPercent
+                rightPageItem.process = bodyOffsetPercent
             }
             
-            
-        }
-    }
-    
-    func changeTitleWithGradient()  {
-        
-        /*
-        if(_leftItemIndex != _rightItemIndex) {
-            CGFloat rightScale = (self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex)/(_rightItemIndex-_leftItemIndex);
-            CGFloat leftScale = 1-rightScale;
-            
-            //颜色渐变
-            CGFloat difR = _selectedColorR-_unSelectedColorR;
-            CGFloat difG = _selectedColorG-_unSelectedColorG;
-            CGFloat difB = _selectedColorB-_unSelectedColorB;
-            
-            UIColor *leftItemColor = [UIColor colorWithRed:_unSelectedColorR+leftScale*difR green:_unSelectedColorG+leftScale*difG blue:_unSelectedColorB+leftScale*difB alpha:1];
-            UIColor *rightItemColor = [UIColor colorWithRed:_unSelectedColorR+rightScale*difR green:_unSelectedColorG+rightScale*difG blue:_unSelectedColorB+rightScale*difB alpha:1];
-            
-            XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
-            XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
-            leftTabItem.textColor = leftItemColor;
-            rightTabItem.textColor = rightItemColor;
-            
-            //字体渐变
-            leftTabItem.transform = CGAffineTransformMakeScale(_minScale+(1-_minScale)*leftScale, _minScale+(1-_minScale)*leftScale);
-            rightTabItem.transform = CGAffineTransformMakeScale(_minScale+(1-_minScale)*rightScale, _minScale+(1-_minScale)*rightScale);
-        }
-*/
-        
-    }
-    func changeTitleWithBlend() {
-        /*
-        CGFloat leftScale = self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex;
-        if(leftScale == 0) {
-            return; //起点和终点不处理，终点时左右index已更新，会绘画错误（你可以注释看看）
+            break
+        default:
+            break
         }
         
-        XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
-        XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
-        
-        leftTabItem.textColor = _selectedColor;
-        rightTabItem.textColor = _unSelectedColor;
-        leftTabItem.fillColor = _unSelectedColor;
-        rightTabItem.fillColor = _selectedColor;
-        leftTabItem.process = leftScale;
-        rightTabItem.process = leftScale;
-        */
     }
     
     //MARK: - Indicator animation
@@ -535,6 +583,7 @@ extension GLPageView: UIScrollViewDelegate {
         
         //计算indicator此时的centerx
         let nowIndicatorCenterX: CGFloat = pageItemWidth*(0.5+bodyScrollView.contentOffset.x/bodyScrollView.bounds.size.width)
+        
         //计算此时body的偏移量在一页中的占比
         var relativeLocation: CGFloat = (bodyScrollView.contentOffset.x/bodyScrollView.bounds.size.width - CGFloat(leftItemIndex)) / CGFloat(rightItemIndex - leftItemIndex)
         
@@ -553,7 +602,6 @@ extension GLPageView: UIScrollViewDelegate {
         let nowIndicatorWidth: CGFloat = leftIndicatorWidth + (rightIndicatorWidth - leftIndicatorWidth) * relativeLocation
         
         
-        print("-===%f",indicatorView.bounds.origin.y)
         indicatorView.frame = CGRect(x: nowIndicatorCenterX - nowIndicatorWidth * 0.5 - pageScrollView.contentOffset.x, y: indicatorView.frame.origin.y, width: nowIndicatorWidth, height: indicatorView.bounds.size.height)
         
         
@@ -561,39 +609,59 @@ extension GLPageView: UIScrollViewDelegate {
     
     func changeIndicatorFrameByStretch()  {
         
-        /*
-        if(_indicatorWidth <= 0) {
-            return;
+        if indicatorWidth <= 0 {
+            return
         }
-        
         //计算此时body的偏移量在一页中的占比
-        CGFloat relativeLocation = (self.bodyView.contentOffset.x/WIDTH(self.bodyView)-_leftItemIndex)/(_rightItemIndex-_leftItemIndex);
+        var relativeLocation: CGFloat = (bodyScrollView.contentOffset.x / bodyScrollView.bounds.size.width - CGFloat(leftItemIndex)) / CGFloat(rightItemIndex - leftItemIndex)
+        
         //左右边界的时候，占比清0
-        if(_leftItemIndex == _rightItemIndex) {
-            relativeLocation = 0;
+        if leftItemIndex == rightItemIndex {
+            relativeLocation = 0
         }
         
-        XXPageTabItemLable *leftTabItem = _tabItems[_leftItemIndex];
-        XXPageTabItemLable *rightTabItem = _tabItems[_rightItemIndex];
+        let leftPageItem = pageItemLabels[leftItemIndex]
+        let rightPageItem = pageItemLabels[rightItemIndex]
         
         //当前的frame
-        CGRect nowFrame = CGRectMake(0, ORIGIN_Y(self.indicatorView), 0, HEIGHT(self.indicatorView));
-        
+        var nowFrame: CGRect = CGRect(x: 0, y: indicatorView.frame.origin.y, width: 0, height: indicatorView.bounds.size.height)
         //计算宽度
-        if(relativeLocation <= 0.5) {
-            nowFrame.size.width = _indicatorWidth+_tabItemWidth*(relativeLocation/0.5);
-            nowFrame.origin.x = (leftTabItem.center.x-self.tabView.contentOffset.x)-_indicatorWidth/2.0;
+        if relativeLocation <= 0.5 {
+            
+            nowFrame.size.width = indicatorWidth + pageItemWidth * (relativeLocation / 0.5)
+            nowFrame.origin.x = (leftPageItem.center.x - pageScrollView.contentOffset.x) - indicatorWidth * 0.5
         } else {
-            nowFrame.size.width = _indicatorWidth+_tabItemWidth*((1-relativeLocation)/0.5);
-            nowFrame.origin.x = (rightTabItem.center.x-self.tabView.contentOffset.x)+_indicatorWidth/2.0-nowFrame.size.width;
+            nowFrame.size.width = indicatorWidth + pageItemWidth * ((1 - relativeLocation) / 0.5)
+            nowFrame.origin.x = (rightPageItem.center.x - pageScrollView.contentOffset.x) + indicatorWidth * 0.5 - nowFrame.size.width
+            
         }
+        indicatorView.frame = nowFrame
         
-        self.indicatorView.frame = nowFrame;
-        */
+        
     }
     
     
-
+    /**
+     获取color的rgb值
+     */
+    
+    func getRGBWithColor(color: UIColor) -> Array<CGFloat> {
+        
+        var R: CGFloat = 0
+        var G: CGFloat = 0
+        var B: CGFloat = 0
+        
+        let numComponents: Int = color.cgColor.numberOfComponents
+        let components: [CGFloat] = color.cgColor.components!
+        if numComponents == 4 {
+            R = components[0];
+            G = components[1];
+            B = components[2];
+        }
+        return [R,G,B]
+    }
+    
+    
     
     
 }

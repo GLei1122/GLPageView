@@ -43,8 +43,9 @@ class ViewController: UIViewController {
         print(self.view.bounds.size.height)
         print(NSStringFromCGRect(frame))
         pageView = GLPageView.init(frame: frame, childTitles: titleArray, childControllers: self.childViewControllers)
-        
+        pageView?.titleStyle = GLPageTitleStyle.Gradient
         pageView?.maxNumberOfPageItems = 5
+        pageView?.selectedColor = UIColor.yellow
         //pageView?.selectedPageIndex = 1;
         pageView?.delegete=self
         
